@@ -20,16 +20,16 @@
 
 ### **1. My Project's Goal**
 <a name="1-my-projects-goal"></a>
-For this project, I decided to master the foundational concepts of networking on AWS by building a complete cloud infrastructure from the ground up. My goal was to move beyond single-server deployments and understand how to create secure, isolated environments and enable private communication between them.
+For this project, I focused on learning the core **networking** concepts in AWS by building a complete cloud setup from scratch. My main aim was to go beyond single-server setups and understand how to design secure and isolated environments that can communicate privately with each other.
 
-The plan was to:
-1.  Create two completely separate Virtual Private Clouds (VPCs) to simulate `test` and `production` environments.
-2.  Launch virtual servers (EC2 instances) within these VPCs.
-3.  Securely provide internet access to public-facing servers.
-4.  Establish a private, secure connection between the two VPCs using VPC Peering.
-5.  Create a secure private subnet for backend services (like databases) that could initiate outbound internet connections for updates without being exposed to inbound traffic.
+Here’s what I planned to do:
+1. Create two separate Virtual Private Clouds (VPCs) to represent `test` and `production` environments.
+2. Launch EC2 instances (virtual servers) inside each VPC.
+3. Configure **internet access** securely for public-facing servers.
+4. Set up **VPC Peering** to allow private and secure communication between the two VPCs.
+5. Build a **private subnet** for backend services (like databases) that can access the internet for updates but are protected from incoming connections.
 
-Finally, a crucial part of the project was learning how to decommission all the resources in the correct order to ensure my AWS account remained clean and free of unexpected charges.
+Lastly, I made sure to learn how to properly delete all resources in the right order to avoid unnecessary AWS charges and keep my account clean.
 
 ---
 
@@ -39,15 +39,15 @@ Finally, a crucial part of the project was learning how to decommission all the 
 <a name="2-core-concepts-the-what--why"></a>
 Before diving into the steps, I wanted to solidify my understanding of the key components I would be working with.
 
-* **What is a VPC (Virtual Private Cloud)?** I think of a VPC as my own private, isolated section of the AWS cloud. It's like buying a plot of land. By default, anything I build inside my VPC is completely cut off from the rest of the world and even other VPCs, giving me full control over security and access.
+* **What is a VPC (Virtual Private Cloud)?** A VPC is **your own private and isolated network** within the AWS cloud. You can think of it like owning a separate piece of land where you decide what to build and how it connects to the outside world. By default, everything inside your VPC is fully isolated — it **doesn’t communicate with the internet** or other VPCs unless you allow it. This gives you complete control over your network’s security, access, and traffic flow.
 
-* **What is a Subnet?** If a VPC is my plot of land, a Subnet is a room inside my house. I can designate some rooms as "public" (like a living room) and others as "private" (like a bedroom). In AWS terms, a **public subnet** is one that can have a direct route to the internet, while a **private subnet** does not.
+* **What is a Subnet?** A Subnet is **a smaller section within a VPC**. If the VPC is like your piece of land, then a Subnet is like dividing that land into specific areas or rooms. You can create **public subnets** that **connect** directly **to the internet** or **private subnets** that stay isolated and are used for internal resources. This helps organize your network and control which parts are accessible from outside and which remain secure inside.
 
-* **What is an Internet Gateway (IGW)?** This is the single, secure doorway for my entire house. An IGW is a component that I attach to my VPC to allow two-way communication with the internet. Without it, my VPC is a completely closed box.
+* **What is an Internet Gateway (IGW)?** An Internet Gateway is the **main entry and exit point** that allows resources in your VPC **to communicate with the internet**. It acts like a secure doorway to the outside world. When you attach an IGW to your VPC and configure the routing properly, **instances in public subnets can send and receive data from the internet**. Without an IGW, your VPC remains fully isolated with no external connectivity.
 
-* **What is a Route Table?** A Route Table is the GPS or internal signage system for my VPC. It contains a set of rules, called routes, that determine where network traffic from my subnets is directed. For a subnet to be "public," its route table must have a route (`0.0.0.0/0`) that points all internet-bound traffic to the Internet Gateway.
+* **What is a Route Table?** A Route Table is a set of rules that **control how network traffic moves within your VPC**. It decides where data from your subnets should go. For example, if a subnet needs internet access, its route table must include a route (`0.0.0.0/0`) that directs all internet-bound traffic to the Internet Gateway. In simple terms, it acts like a map or guide that tells your VPC where to send each piece of network traffic.
 
-* **What is a NAT Gateway?** A NAT (Network Address Translation) Gateway is a managed AWS service that solves a critical security problem: how to let servers in a private subnet (like a database) download software updates from the internet without exposing them to inbound connections. The NAT Gateway lives in the public subnet and acts like a one-way door, allowing private instances to go out to the internet while blocking any unsolicited traffic from coming in.
+* **What is a NAT Gateway?** A NAT (Network Address Translation) Gateway is an AWS service that **allows instances in a private subnet to access the internet securely**, without being exposed to incoming traffic. It’s placed in a public subnet and acts like a one-way bridge — private servers can connect outward (for tasks like software updates), but no one from the internet can directly connect back to them. This helps maintain both functionality and security in your network design.
 
 ---
 
